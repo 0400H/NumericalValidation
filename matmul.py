@@ -50,9 +50,9 @@ def matmul_test(test_case, bits):
     mat_un = np.full((dim_m, dim_k), value_a, dtype=eval('np.uint'+str(bits)))
     mat_sn_1 = np.full((dim_m, dim_k), value_a, dtype=eval('np.int'+str(bits)))
     mat_sn_2 = np.full((dim_k, dim_n), value_b, dtype=eval('np.int'+str(bits)))
-    mat_s2n_ref = np.zeros((dim_m, dim_n), dtype=eval('np.int'+str(2*bits)))
+    # mat_s2n_ref = np.zeros((dim_m, dim_n), dtype=eval('np.int'+str(2*bits)))
     mat_s2n = np.zeros((dim_m, dim_n), dtype=eval('np.int'+str(2*bits)))
-    MatMul_UnSn(mat_un, mat_sn_2, mat_s2n_ref)
+    mat_s2n_ref = np.matmul(mat_un, mat_sn_2)
     MatMul_SnSn(mat_sn_1, mat_sn_2, mat_s2n)
     count, length = matrix_validation(mat_s2n_ref, mat_s2n)
     # print('mat_s2n_ref', mat_s2n_ref.dtype, mat_s2n_ref)
@@ -61,6 +61,7 @@ def matmul_test(test_case, bits):
     return 1.0 * count / length
 
 class unit_test(unittest.TestCase):
+    target_error_rate = 0.0
     test_case = [
         (128, 64, 32, 0, 0),
         (128, 64, 32, 0, 64),
@@ -68,8 +69,13 @@ class unit_test(unittest.TestCase):
         (128, 64, 32, 64, 64),
         (128, 64, 32, 64, -64),
         (128, 64, 32, 127, -128),
+        (64, 128, 32, 127, -128),
+        (64, 128, 128, 127, -128),
+        (64, 128, 256, 127, -128),
+        (64, 128, 512, 127, -128),
+        (512, 512, 512, 127, -128),
     ]
-    target_error_rate = 0.0
+
     def test_8bit(self):
         for arg in self.test_case:
             error_rate = matmul_test(arg, 8)
