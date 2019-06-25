@@ -7,4 +7,5 @@ core*
 temp*
 *.o
 *.out
+*.pyc
 __pycache__

@@ -3,10 +3,11 @@
 import ctypes as ct
 import numpy as np
 import unittest
+from numba import jit
 
 def matrix_validation(mat_a, mat_b):
     if mat_a.shape != mat_b.shape:
-        print('mat_u8 shape != mat_s8 shape')
+        print('mat_a shape != mat_b shape')
         return None
 
     shape_m = mat_a.shape[0]
